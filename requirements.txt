@@ -1,0 +1,4 @@
+r2pipe
+frida
+tqdm
+colorama

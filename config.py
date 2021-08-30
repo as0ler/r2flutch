@@ -1,0 +1,3 @@
+BLOCKSIZE = "0x80000"
+TMP_FOLDER = 'tmp'
+DUMP_FOLDER = 'dump'
