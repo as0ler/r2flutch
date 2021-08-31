@@ -16,7 +16,8 @@ from lib.config import *
 
 
 def init():
-    shutil.rmtree(TMP_FOLDER)
+    if os.path.isdir(TMP_FOLDER):
+        shutil.rmtree(TMP_FOLDER)
     os.makedirs(TMP_FOLDER)
     os.makedirs(os.path.join(TMP_FOLDER, DUMP_FOLDER))
 
