@@ -1,0 +1,11 @@
+[MASTER]
+disable=
+    C0114, # missing-module-docstring
+    C0116, # Missing function or method docstring (missing-function-docstring)
+    C0115, # Missing class docstring (missing-class-docstring)
+    R0913, # Too many arguments (7/5) (too-many-arguments)
+    W0703  # Catching too general exception Exception (broad-except)
+
+
+[FORMAT]
+max-line-length=120
