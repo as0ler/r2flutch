@@ -1,0 +1,5 @@
+-r build.txt
+pip
+pbr
+setuptools
+twine

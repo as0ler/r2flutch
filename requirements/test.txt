@@ -1,0 +1,10 @@
+-r build.txt
+bandit
+pylint
+flake8
+flake8-colors
+mock
+pytest
+coverage
+doublex
+tox

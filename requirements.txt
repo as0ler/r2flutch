@@ -1,4 +1,1 @@
-r2pipe
-frida
-tqdm
-colorama
+-r requirements/build.txt
