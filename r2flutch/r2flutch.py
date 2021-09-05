@@ -8,12 +8,12 @@ import argparse
 import os
 import shutil
 import sys
-from lib.repl import print_console, SUCCESS
-from lib.device import get_usb_device, list_applications, spawn_r2frida_process
-from lib.io import set_block_size, mount_app_bundle, copy_application_bundle, list_application_content
-from lib.r2frida import load_all_modules, dump_decrypted_modules, get_main_bundle_name, load_r2f_plugin
-from lib.config import BLOCKSIZE, TMP_FOLDER, DUMP_FOLDER, BIN_FOLDER
-from lib.utils import generate_ipa, copy_modules_to_app_bundle
+from r2flutch.lib.repl import print_console, SUCCESS
+from r2flutch.lib.device import get_usb_device, list_applications, spawn_r2frida_process
+from r2flutch.lib.io import set_block_size, mount_app_bundle, copy_application_bundle, list_application_content
+from r2flutch.lib.r2frida import load_all_modules, dump_decrypted_modules, get_main_bundle_name, load_r2f_plugin
+from r2flutch.lib.config import BLOCKSIZE, TMP_FOLDER, DUMP_FOLDER, BIN_FOLDER
+from r2flutch.lib.utils import generate_ipa, copy_modules_to_app_bundle
 
 
 def init():
@@ -24,7 +24,17 @@ def init():
     os.makedirs(os.path.join(TMP_FOLDER, BIN_FOLDER))
 
 
-def main(arguments):
+def main():
+    parser = argparse.ArgumentParser(description='r2flutch (by Murphy)')
+    parser.add_argument('-d', '--debug', dest='debug', action='store_true', help='Show debug messages')
+    parser.add_argument('-o', '--output', type=str, help='Path where output files will be stored.')
+    parser.add_argument('-i', '--ipa', dest='generate_ipa', action='store_true', help='Generate an IPA file')
+    parser.add_argument('-l', '--list', dest='list', action='store_true', help='List the installed apps')
+    parser.add_argument('target', nargs='?', help='Bundle identifier of the target app')
+    arguments = parser.parse_args()
+    if len(sys.argv[1:]) == 0:
+        parser.print_help()
+        sys.exit(0)
     init()
     output_dir = arguments.output if arguments.output else '.'
     os.makedirs(output_dir, exist_ok=True)
@@ -60,14 +70,4 @@ def main(arguments):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='r2flutch (by Murphy)')
-    parser.add_argument('-d', '--debug', dest='debug', action='store_true', help='Show debug messages')
-    parser.add_argument('-o', '--output', type=str, help='Path where output files will be stored.')
-    parser.add_argument('-i', '--ipa', dest='generate_ipa', action='store_true', help='Generate an IPA file')
-    parser.add_argument('-l', '--list', dest='list', action='store_true', help='List the installed apps')
-    parser.add_argument('target', nargs='?', help='Bundle identifier of the target app')
-    args = parser.parse_args()
-    if len(sys.argv[1:]) == 0:
-        parser.print_help()
-        sys.exit(0)
-    main(args)
+    main()
