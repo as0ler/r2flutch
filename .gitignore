@@ -1,4 +1,10 @@
+.idea
+**/__pycache__/
+venv
 .DS_Store
+AUTHORS
+ChangeLog
+dist/*
 tmp
 # Byte-compiled / optimized / DLL files
 __pycache__/
