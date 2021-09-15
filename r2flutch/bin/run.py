@@ -8,12 +8,12 @@ import argparse
 import os
 import shutil
 import sys
-from r2flutch.lib.repl import print_console, SUCCESS
-from r2flutch.lib.device import get_usb_device, list_applications, spawn_r2frida_process
-from r2flutch.lib.io import set_block_size, mount_app_bundle, copy_application_bundle, list_application_content
-from r2flutch.lib.r2frida import load_all_modules, dump_decrypted_modules, get_main_bundle_name, load_r2f_plugin
-from r2flutch.lib.config import BLOCKSIZE, TMP_FOLDER, DUMP_FOLDER, BIN_FOLDER
-from r2flutch.lib.utils import generate_ipa, copy_modules_to_app_bundle
+from r2flutch.repl import print_console, SUCCESS
+from r2flutch.device import get_usb_device, list_applications, spawn_r2frida_process
+from r2flutch.io import set_block_size, mount_app_bundle, copy_application_bundle, list_application_content
+from r2flutch.r2frida import load_all_modules, dump_decrypted_modules, get_main_bundle_name, load_r2f_plugin
+from r2flutch.config import BLOCKSIZE, TMP_FOLDER, DUMP_FOLDER, BIN_FOLDER
+from r2flutch.utils import generate_ipa, copy_modules_to_app_bundle
 
 
 def init():
