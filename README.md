@@ -9,7 +9,7 @@ Yet another tool to decrypt iOS apps using r2frida.
 It requires to install Frida on the Jailbroken iOS device:
 
  * Jailbroken device
- * Frida installed on the device. (f.ex. via Cydia) https://frida.re/docs/ios/#with-jailbreak
+ * Frida installed on the device. (e.g. via Cydia) https://frida.re/docs/ios/#with-jailbreak
  * radare2 installed. https://github.com/radareorg/radare2
 
 
