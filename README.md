@@ -1,7 +1,7 @@
 # r2flutch
 Yet another tool to decrypt iOS apps using r2frida.
 
-![Demo](https://github.com/as0ler/r2flutch/img/demo)
+![Demo](img/demo.png)
 
 
 ## Requirements
@@ -31,11 +31,11 @@ r2pm -ci r2flutch
 
 * Run `r2flutch -l` to list all the installed apps.
 
-![List applications](https://github.com/as0ler/r2flutch/img/list_apps)
+![List applications](img/list_apps.png)
 
 
 * Run `r2flutch -i <App Bundle>` to pull a decrypted IPA from the device.
 
-![List applications](https://github.com/as0ler/r2flutch/img/demo)
+![List applications](img/demo.png)
 
 * Run `r2flutch <App Bundle>` to pull the decrypted app binary from the device.
