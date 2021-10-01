@@ -11,7 +11,7 @@ i[!r2flutch](https://www.youtube.com/watch?v=dJMPDYs_KIw)
 It requires to install Frida on the Jailbroken iOS device:
 
  * Jailbroken device
- * Frida installed on the device. (f.ex. via Cydia) https://frida.re/docs/ios/#with-jailbreak
+ * Frida installed on the device. (e.g. via Cydia) https://frida.re/docs/ios/#with-jailbreak
  * radare2 installed. https://github.com/radareorg/radare2
 
 
