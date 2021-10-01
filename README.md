@@ -1,7 +1,7 @@
 # r2flutch
 Yet another tool to decrypt iOS apps using r2frida.
 
-i[!r2flutch](https://www.youtube.com/watch?v=dJMPDYs_KIw)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dJMPDYs_KIw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ![Demo](img/download.png)
 
