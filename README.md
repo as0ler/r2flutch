@@ -1,7 +1,7 @@
 # r2flutch
 Yet another tool to decrypt iOS apps using r2frida.
 
-![Demo](demo.gif)
+![Demo](img/demo.gif)
 
 
 ## Requirements
@@ -40,4 +40,4 @@ r2pm -ci r2flutch
 
 * Run `r2flutch <App Bundle>` to pull the decrypted app binary from the device.
 
-![Demo](download.png){:height="50%" width="50%"}
+![Demo](img/download.png)
