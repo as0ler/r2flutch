@@ -59,8 +59,8 @@ def get_file(r2f, filepath, dest, debug_enabled):
 
 
 def list_content_path(r2f, path):
-    full_path = os.path.join(APP_BUNDLE_BASE_PATH, path)
-    r2cmd = 'mdj %s' % full_path
+    b64_full_path = base64.b64encode(os.path.join(APP_BUNDLE_BASE_PATH, path).encode()).decode()
+    r2cmd = 'mdj base64:%s' % b64_full_path
     return r2f.cmdj(r2cmd)
 
 
