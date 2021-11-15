@@ -4,6 +4,7 @@
 # Author : Murphy
 # LICENSE: GPL v3
 
+import base64
 import os
 import re
 import r2pipe
@@ -63,7 +64,10 @@ def dump_decrypted_modules(r2f, debug_enabled=False):
             print_console('CryptSize: %s' % size, level=DEBUG)
             print_console('Crypt Header: %s' % crypt_header, level=DEBUG)
         r2f.cmd('s %s' % offset)
-        r2f.cmd('wtf %s %s' % (bin_dumped, size))
+        b64_bin_dumped = base64.b64encode(bin_dumped.encode()).decode()
+        r2f.cmd('wtf base64:%s %s' % (b64_bin_dumped, size))
+        if debug_enabled:
+            print_console('Downloading module %s => %s' % (module['path'],dst_bin), level=DEBUG)
         download_module(r2f, module['path'], dst_bin)
         patch_bin(bin_dumped, dst_bin, crypt_header, crypt_offset, debug_enabled)
         print_console('Module %s successfully decrypted' % dst_bin)

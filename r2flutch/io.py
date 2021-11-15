@@ -37,8 +37,8 @@ def copy_application_bundle(r2f, app_content, dest, debug_enabled):
 
 def download_module(r2f, module_path, dest_path):
     basename = os.path.basename(module_path)
-    full_path = os.path.join(DEVICE_PATH, module_path[1:])
-    r2f.cmd('\"mg %s\"' % full_path)
+    b64_full_path = base64.b64encode(os.path.join(DEVICE_PATH, module_path[1:]).encode()).decode()
+    r2f.cmd('mg base64:%s' % b64_full_path)
     shutil.move(basename, dest_path)
 
 
