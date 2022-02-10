@@ -14,6 +14,7 @@ from r2flutch.repl import print_console, ERROR
 PREFIX = '/r2f'
 APP_BUNDLE_BASE_PATH = '%s/AppBundle' % PREFIX
 DEVICE_PATH = '%s/Device' % PREFIX
+IGNORED_FILES = ['.gitkeep', '.gitignore']
 
 
 def set_block_size(r2f, blocksize):
@@ -32,7 +33,8 @@ def copy_application_bundle(r2f, app_content, dest, debug_enabled):
         os.makedirs(dest)
     print_console('Copy App Bundle to disk')
     for filepath in tqdm(app_content):
-        get_file(r2f, filepath, dest, debug_enabled)
+        if os.path.basename(filepath) not in IGNORED_FILES:
+            get_file(r2f, filepath, dest, debug_enabled)
 
 
 def download_module(r2f, module_path, dest_path):
