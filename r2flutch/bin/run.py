@@ -66,6 +66,9 @@ def main():
         end_msg = 'r2flutch Decryption Complete!'
         print_console(end_msg, level=SUCCESS)
         r2f.cmd(':?E ' + end_msg)
+    else:
+        end_msg = 'r2flutch Decryption failed!'
+        print_console(end_msg, level=ERROR)
     r2f.quit()
 
 
