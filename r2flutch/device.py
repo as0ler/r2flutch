@@ -18,7 +18,7 @@ import sys
 import threading
 import frida
 import r2pipe
-from r2flutch.repl import print_console, ERROR, DEFAULT
+from r2flutch.repl import print_console, ERROR, DEFAULT, WARNING
 
 
 def get_usb_device():
@@ -103,4 +103,4 @@ def kill_process(device, r2f):
     try:
      device.kill(int(pid))
     except Exception as err:
-        print_console("[x] an error occurred killing process: %s" % err, ERROR)
+        print_console("[x] an error occurred killing process: %s" % err, WARNING)

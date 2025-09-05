@@ -13,6 +13,7 @@ SUCCESS = 1
 ERROR = 2
 DEBUG = 3
 DEFAULT = 4
+WARNING = 5
 
 
 def print_console(msg, level=INFO, formatter=0):
@@ -35,5 +36,8 @@ def print_console(msg, level=INFO, formatter=0):
     elif level == DEFAULT:
         msg = msg
         color = Fore.WHITE
+    elif level == WARNING:
+        msg = "[⚠] " + msg
+        color = Fore.YELLOW + Style.BRIGHT
     
     print(color + tabs + msg + Style.RESET_ALL)
