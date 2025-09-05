@@ -93,3 +93,14 @@ def spawn_r2frida_process(bundle_id, device_id):
     except Exception:
         print_console("Cannot open target process: " + bundle_id, ERROR)
         sys.exit(0)
+
+def kill_process(device, r2f):
+    """
+    Kill the target process.
+    """
+    pid = r2f.cmd(":getPID")
+    print_console("Killing process %s" % pid)
+    try:
+     device.kill(int(pid))
+    except Exception as err:
+        print_console("[x] an error occurred killing process: %s" % err, ERROR)

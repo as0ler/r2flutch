@@ -18,7 +18,7 @@ import os
 import shutil
 import sys
 from r2flutch.repl import print_console, SUCCESS
-from r2flutch.device import get_usb_device, list_applications, spawn_r2frida_process
+from r2flutch.device import get_usb_device, list_applications, spawn_r2frida_process, kill_process
 from r2flutch.io import set_block_size, get_application_content, list_application_content
 from r2flutch.r2frida import load_all_modules, get_main_bundle_name, load_r2f_plugin, get_modules_to_decrypt, get_module_paths
 from r2flutch.r2frida import get_encryption_info, print_encryption_info, dump_decrypted_module_data, patch_bin
@@ -86,6 +86,7 @@ def main():
         end_msg = 'r2flutch Decryption Complete!'
         print_console(end_msg, level=SUCCESS)
         r2f.cmd(':?E ' + end_msg)
+    kill_process(device, r2f)
     r2f.quit()
 
 

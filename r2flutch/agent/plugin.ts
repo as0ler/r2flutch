@@ -15,22 +15,23 @@ const commands = {
     dump: dump,
     "dump*": R2dump,
     getMainBundleName: getMainBundleName,
-    getMainBundlePath: getMainBundlePath
+    getMainBundlePath: getMainBundlePath,
+    getPID: getPID
 };
 
 r2frida.pluginRegister("r2flutch", function (name) {
     return commands[name];
 });
 
-async function R2dump (args: string[]): Promise<string> {
-    const mods = await dump(args);
+function R2dump (args: string[]): string {
+    const mods = dump(args);
     return mods.map(mod => {
         const addr = (parseInt(mod.base.toString(), 16) + parseInt(mod.encryption_info.cryptoff.toString(), 16)).toString(16);
         return `s 0x${addr}; wtf ${mod.name} ${mod.encryption_info.cryptsize}`;
     }).join("\n");
 }
 
-async function dump (args: string[]): Promise<DecryptedModule[]> {
+function dump (args: string[]): DecryptedModule[] {
     try{
         Process.getModuleByName("Foundation").ensureInitialized();
     } catch(e){
@@ -135,4 +136,8 @@ function getEncryptionInfo (baseAddr: NativePointer, ncmds: number): EncryptionI
     }
     console.error(`[X] Unable to get encryption info at ${baseAddr.toString()}`);
     return null;
+}
+
+function getPID (): number {
+    return Process.id;
 }
