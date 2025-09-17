@@ -3,6 +3,7 @@
 
 # Author : Murphy
 # LICENSE: GPL v3
+# Copyright (C) 2025 Murphy <me@0xmurphy.me>
 
 from colorama import Fore, Style
 
@@ -12,21 +13,31 @@ SUCCESS = 1
 ERROR = 2
 DEBUG = 3
 DEFAULT = 4
+WARNING = 5
 
 
 def print_console(msg, level=INFO, formatter=0):
     tabs, color = ["", ""]
     for _ in range(formatter):
         tabs += "    "
+    
     if level == ERROR:
-        msg = "[x] ERROR - " + msg
-        color = Fore.RED
+        msg = "[✗] ERROR - " + msg
+        color = Fore.RED + Style.BRIGHT
     elif level == SUCCESS:
-        msg = "[*] SUCCESS - " + msg
-        color = Fore.YELLOW
+        msg = "[✓] SUCCESS - " + msg
+        color = Fore.GREEN + Style.BRIGHT
     elif level == DEBUG:
-        msg = "[DEBUG] - " + msg
-        color = Fore.BLUE
+        msg = "[🔍] DEBUG - " + msg
+        color = Fore.CYAN
     elif level == INFO:
-        msg = "[+] " + msg
+        msg = "[ℹ] " + msg
+        color = Fore.LIGHTBLUE_EX
+    elif level == DEFAULT:
+        msg = msg
+        color = Fore.WHITE
+    elif level == WARNING:
+        msg = "[⚠] " + msg
+        color = Fore.YELLOW + Style.BRIGHT
+    
     print(color + tabs + msg + Style.RESET_ALL)
