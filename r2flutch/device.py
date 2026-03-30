@@ -65,10 +65,16 @@ def list_applications(device):
         applications = device.enumerate_applications()
     except Exception as err:
         sys.exit("[x] Failed to enumerate applications: %s" % err)
-    print_console("Bundle Identifier", level=DEFAULT)
-    print_console("------------------------------", level=DEFAULT)
+    applications = sorted(applications, key=lambda app: app.identifier)
+    id_width = max(len(app.identifier) for app in applications) if applications else 20
+    id_width = max(id_width, len("Bundle Identifier"))
+    header = "%-*s  %s" % (id_width, "Bundle Identifier", "Name")
+    print_console(header, level=DEFAULT)
+    print_console("-" * (id_width + 2 + 30), level=DEFAULT)
     for application in applications:
-        print_console(application.identifier, level=DEFAULT)
+        line = "%-*s  %s" % (id_width, application.identifier, application.name)
+        print_console(line, level=DEFAULT)
+    print_console("%d applications found" % len(applications))
 
 
 def spawn_r2frida_process(bundle_id, device_id):
