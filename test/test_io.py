@@ -45,6 +45,11 @@ class TestGetFile:
         get_file(mock_r2f, "/r2f/file", "/dest")
         mock_r2f_get.assert_called_once()
 
+    def test_ssh_transport_raises_when_sftp_is_none(self):
+        with pytest.raises(SystemExit) as exc_info:
+            get_file(None, "/remote/file.bin", "/dest", transport=TRANSPORT_SSH, sftp=None)
+        assert "sftp" in str(exc_info.value).lower()
+
 
 class TestListContentPath:
 

@@ -15,7 +15,6 @@ and application bundle management in the r2flutch framework.
 import sys
 import os
 import shutil
-import base64
 from tqdm import tqdm
 from r2flutch.repl import print_console, ERROR, DEBUG
 from r2flutch.config import REMOTE_PREFIX, TRANSPORT_SSH, TRANSPORT_FRIDA
@@ -103,6 +102,8 @@ def get_file(r2f, filepath, dest_folder, debug_enabled=False, transport=TRANSPOR
         sftp: paramiko SFTPClient instance (required when transport is 'ssh')
     """
     if transport == TRANSPORT_SSH:
+        if sftp is None:
+            sys.exit("[x] sftp client is required for SSH transport but was not provided")
         ssh_get_remote_file(sftp, filepath, dest_folder, debug_enabled)
         return
     if debug_enabled:
