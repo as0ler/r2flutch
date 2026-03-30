@@ -8,8 +8,8 @@ base_dir=$(cd $(dirname $(${readlink} -f "$0")); pwd)
 echo "Cleaning *.pyc files ..."
 find $base_dir -name \*.pyc | xargs rm 2>/dev/null
 
-python -m coverage run -m pytest -v -rsx -k "test_" --ignore=bin/
-ecode=$?s
+python -m coverage run --source=r2flutch -m pytest test/ -v -rsx -k "test_"
+ecode=$?
 coverage report -m --omit="*/venv/*"
 
 if [ $ecode -eq 5 ]; then

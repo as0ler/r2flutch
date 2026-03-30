@@ -1,0 +1,8 @@
+{
+    "ssh": {
+        "host": "192.168.1.100",
+        "port": 22,
+        "username": "root",
+        "password": "alpine"
+    }
+}
