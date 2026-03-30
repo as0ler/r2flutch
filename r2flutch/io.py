@@ -14,6 +14,7 @@ and application bundle management in the r2flutch framework.
 
 import os
 import shutil
+import sys
 from tqdm import tqdm
 from r2flutch.repl import print_console, ERROR, DEBUG
 from r2flutch.config import REMOTE_PREFIX, TRANSPORT_SSH, TRANSPORT_FRIDA

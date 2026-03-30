@@ -6,12 +6,41 @@ import pytest
 from unittest.mock import patch, MagicMock, call
 from r2flutch.config import TRANSPORT_SSH, TRANSPORT_FRIDA
 from r2flutch.io import (
+    set_block_size,
+    get_remote_path,
     get_file,
     get_application_content,
     list_content_path,
     list_content_path_with_progress,
     list_application_content,
 )
+
+
+class TestSetBlockSize:
+
+    @patch("r2flutch.io.print_console")
+    def test_sets_blocksize(self, mock_print):
+        mock_r2f = MagicMock()
+        mock_r2f.cmd.return_value = "0x400000\n"
+        set_block_size(mock_r2f, "0x400000")
+        mock_r2f.cmd.assert_any_call(r"b %s" % "0x400000")
+
+    @patch("r2flutch.io.print_console")
+    def test_sets_blocksize_debug(self, mock_print):
+        mock_r2f = MagicMock()
+        mock_r2f.cmd.return_value = "0x400000\n"
+        set_block_size(mock_r2f, "0x400000", debug_enabled=True)
+        # The debug call uses level=DEBUG (integer 3), check for "r2.cmd: b" in the message
+        debug_calls = [c for c in mock_print.call_args_list if "r2.cmd: b" in str(c)]
+        assert len(debug_calls) >= 1
+
+
+class TestGetRemotePath:
+
+    def test_prepends_remote_prefix(self):
+        result = get_remote_path(None, "/var/containers/App.app/binary")
+        assert result.startswith("/r2f/")
+        assert "var/containers" in result
 
 
 class TestGetFile:
@@ -44,6 +73,39 @@ class TestGetFile:
         # default transport is TRANSPORT_FRIDA
         get_file(mock_r2f, "/r2f/file", "/dest")
         mock_r2f_get.assert_called_once()
+
+    @patch("r2flutch.io.print_console")
+    @patch("r2flutch.io.shutil.move")
+    @patch("r2flutch.io.os.path.isfile", return_value=True)
+    @patch("r2flutch.io.os.path.exists", return_value=False)
+    @patch("r2flutch.io.os.makedirs")
+    @patch("r2flutch.io.get_remote_file")
+    def test_frida_creates_dest_folder_if_missing(self, mock_r2f_get, mock_makedirs,
+                                                    mock_exists, mock_isfile, mock_move, mock_print):
+        mock_r2f = MagicMock()
+        get_file(mock_r2f, "/r2f/remote/file.bin", "/dest", transport=TRANSPORT_FRIDA)
+        mock_makedirs.assert_called_once()
+
+    @patch("r2flutch.io.print_console")
+    @patch("r2flutch.io.os.path.isfile", return_value=False)
+    @patch("r2flutch.io.get_remote_file")
+    def test_frida_prints_error_when_file_not_found(self, mock_r2f_get, mock_isfile, mock_print):
+        mock_r2f = MagicMock()
+        get_file(mock_r2f, "/r2f/remote/file.bin", "/dest", transport=TRANSPORT_FRIDA)
+        error_calls = [c for c in mock_print.call_args_list if "Failed" in str(c)]
+        assert len(error_calls) >= 1
+
+    @patch("r2flutch.io.print_console")
+    @patch("r2flutch.io.shutil.move")
+    @patch("r2flutch.io.os.path.isfile", return_value=True)
+    @patch("r2flutch.io.os.path.exists", return_value=True)
+    @patch("r2flutch.io.get_remote_file")
+    def test_frida_debug_enabled(self, mock_r2f_get, mock_exists, mock_isfile,
+                                  mock_move, mock_print):
+        mock_r2f = MagicMock()
+        get_file(mock_r2f, "/r2f/remote/file.bin", "/dest", debug_enabled=True, transport=TRANSPORT_FRIDA)
+        debug_calls = [c for c in mock_print.call_args_list if "DEBUG" in str(c) or "Downloading" in str(c)]
+        assert len(debug_calls) >= 1
 
     def test_ssh_transport_raises_when_sftp_is_none(self):
         with pytest.raises(SystemExit) as exc_info:
@@ -126,6 +188,23 @@ class TestListContentPathWithProgress:
         result = list_content_path_with_progress(mock_r2f, "/r2f/app", transport=TRANSPORT_FRIDA)
         assert result == ["/r2f/app/b.bin"]
 
+    @patch("r2flutch.io.ssh_list_remote_folder")
+    def test_ssh_counts_subdirectories(self, mock_ssh_list):
+        mock_sftp = MagicMock()
+        mock_ssh_list.side_effect = [
+            # count_files_recursive first pass
+            [{"name": "sub", "type": "directory", "size": 0}, {"name": "a.txt", "type": "file", "size": 1}],
+            # count_files_recursive second pass (sub)
+            [{"name": "b.txt", "type": "file", "size": 2}],
+            # list_content_path first pass
+            [{"name": "sub", "type": "directory", "size": 0}, {"name": "a.txt", "type": "file", "size": 1}],
+            # list_content_path recurse into sub
+            [{"name": "b.txt", "type": "file", "size": 2}],
+        ]
+        result = list_content_path_with_progress(None, "/app", transport=TRANSPORT_SSH, sftp=mock_sftp)
+        assert "/app/a.txt" in result
+        assert "/app/sub/b.txt" in result
+
 
 class TestListApplicationContent:
 
@@ -147,6 +226,17 @@ class TestListApplicationContent:
         list_application_content(mock_r2f, transport=TRANSPORT_FRIDA)
         args = mock_list.call_args[0]
         assert args[1].startswith("/r2f/")
+
+    @patch("r2flutch.io.list_content_path_with_progress")
+    @patch("r2flutch.io.get_main_bundle_path", return_value="/var/containers/App.app")
+    def test_ssh_without_bundle_path_resolves_it(self, mock_bundle, mock_list):
+        mock_r2f = MagicMock()
+        mock_sftp = MagicMock()
+        mock_list.return_value = []
+        list_application_content(mock_r2f, transport=TRANSPORT_SSH, sftp=mock_sftp, bundle_path=None)
+        mock_bundle.assert_called_once_with(mock_r2f)
+        args = mock_list.call_args[0]
+        assert args[1] == "/var/containers/App.app"
 
 
 class TestGetApplicationContent:

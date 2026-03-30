@@ -116,3 +116,10 @@ class TestSshGetRemoteFile:
         dest = str(tmp_path)
         # Should not raise, just print an error
         ssh_get_remote_file(mock_sftp, "/remote/file", dest)
+
+    @patch("r2flutch.ssh.print_console")
+    def test_download_debug_prints_message(self, mock_print, tmp_path):
+        mock_sftp = MagicMock()
+        dest = str(tmp_path)
+        ssh_get_remote_file(mock_sftp, "/remote/file", dest, debug_enabled=True)
+        assert any("SSH downloading" in str(c) for c in mock_print.call_args_list)
