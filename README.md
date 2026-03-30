@@ -5,7 +5,7 @@ Yet another tool to decrypt iOS apps using r2frida.
 ## Requirements
 
 - Jailbroken iOS device
-- [Frida](https://frida.re/docs/ios/#with-jailbreak) installed on the device (e.g. via Cydia/Sileo)
+- [Frida](https://frida.re/docs/ios/#with-jailbreak) 17 supported (tested on 17.9.1) installed on the device (e.g. via Cydia/Sileo)
 - [radare2](https://github.com/radareorg/radare2) installed on the host
 - [r2frida](https://github.com/nowsecure/r2frida) installed on the host
 - Python >= 3.6
@@ -30,20 +30,11 @@ r2pm -ci r2flutch
 ```bash
 git clone https://github.com/as0ler/r2flutch.git
 cd r2flutch
-pip install -r requirements.txt
-pip install -e .
+./install.sh
 ```
 
-After installing, build the r2frida agent dependencies:
-
-```bash
-cd r2flutch/agent
-npm install
-```
-
-> **Note:** The `npm install` step is required so that the TypeScript plugin can
-> resolve `frida-objc-bridge` at runtime. Without it, r2frida will fail to
-> compile the plugin and all decryption commands will be unavailable.
+The `install.sh` script installs pip dependencies, builds the r2frida agent
+plugin (`npm install`), and installs the package.
 
 ## Usage
 
