@@ -71,15 +71,15 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     debug_enabled = arguments.debug
     transport = arguments.transport
+    device = get_usb_device()
+    if arguments.list:
+        list_applications(device)
+        sys.exit(0)
     ssh_client = None
     sftp = None
     if transport == TRANSPORT_SSH:
         ssh_cfg = load_ssh_config(arguments.config)
         ssh_client, sftp = ssh_connect(ssh_cfg)
-    device = get_usb_device()
-    if arguments.list:
-        list_applications(device)
-        sys.exit(0)
     r2f = spawn_r2frida_process(arguments.target, device.id)
     load_r2f_plugin(r2f)
     set_block_size(r2f, BLOCKSIZE, debug_enabled)
