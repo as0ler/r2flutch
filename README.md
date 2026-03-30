@@ -30,16 +30,38 @@ r2pm -ci r2flutch
 
 ## Usage
 
+> **Note:** The default transport is **SSH**, which requires a `config.json` file with device credentials (see [SSH Transport](#ssh-transport-default) below). To use the original Frida-based transfer without a config file, add `-t frida` to any command.
+
 * Run `r2flutch -l` to list all the installed apps.
 
 ![List applications](img/list_apps.png)
 
 
-* Run `r2flutch -i <App Bundle>` to pull a decrypted IPA from the device.
+* Run `r2flutch -i <App Bundle>` to pull a decrypted IPA from the device (SSH, requires `config.json`).
+
+```
+r2flutch -i com.example.app
+```
+
+Or without a config file using Frida transport:
+
+```
+r2flutch -t frida -i com.example.app
+```
 
 ![List applications](img/demo.png)
 
-* Run `r2flutch <App Bundle>` to pull the decrypted app binary from the device.
+* Run `r2flutch <App Bundle>` to pull the decrypted app binary from the device (SSH, requires `config.json`).
+
+```
+r2flutch com.example.app
+```
+
+Or without a config file using Frida transport:
+
+```
+r2flutch -t frida com.example.app
+```
 
 ![Demo](img/download.png)
 
