@@ -2,7 +2,7 @@
 
 Yet another tool to decrypt iOS apps using r2frida.
 
-![Demo](demo.gif)
+![Demo](img/demo.gif)
 
 ## Requirements
 
