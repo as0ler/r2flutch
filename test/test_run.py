@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import json
-import os
 import sys
 import pytest
-from unittest.mock import patch, MagicMock, call
+from unittest.mock import patch, MagicMock
 from r2flutch.config import TRANSPORT_SSH, TRANSPORT_FRIDA, DEFAULT_TRANSPORT
 
 
