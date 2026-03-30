@@ -24,10 +24,10 @@ from r2flutch.repl import print_console, ERROR, DEFAULT, WARNING
 def get_usb_device():
     """
     Wait for and return the first available USB device.
-    
+
     Uses Frida's device manager to detect device changes and
     automatically connects to the first USB device found.
-    
+
     Returns:
         frida.core.Device: The connected USB device instance
     """
@@ -54,10 +54,10 @@ def get_usb_device():
 def list_applications(device):
     """
     List all installed applications on the connected device.
-    
+
     Enumerates all applications installed on the specified device and
     displays their bundle identifiers in a formatted table.
-    
+
     Args:
         device: The Frida device instance to query for applications
     """
@@ -74,14 +74,14 @@ def list_applications(device):
 def spawn_r2frida_process(bundle_id, device_id):
     """
     Spawn and connect to a target iOS application process using r2frida.
-    
+
     Creates an r2frida connection to a specified iOS application by spawning
-    the process on the target device. 
-    
+    the process on the target device.
+
     Args:
         bundle_id: The bundle identifier of the target iOS application
         device_id: The identifier of the USB device where the app is installed
-        
+
     Returns:
         r2pipe.r2pipe: An r2pipe instance connected to the target process
     """
@@ -94,6 +94,7 @@ def spawn_r2frida_process(bundle_id, device_id):
         print_console("Cannot open target process: " + bundle_id, ERROR)
         sys.exit(0)
 
+
 def kill_process(device, r2f):
     """
     Kill the target process.
@@ -101,6 +102,6 @@ def kill_process(device, r2f):
     pid = r2f.cmd(":getPID")
     print_console("Killing process %s" % pid)
     try:
-     device.kill(int(pid))
+        device.kill(int(pid))
     except Exception as err:
         print_console("[x] an error occurred killing process: %s" % err, WARNING)

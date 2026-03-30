@@ -20,7 +20,7 @@ def print_console(msg, level=INFO, formatter=0):
     tabs, color = ["", ""]
     for _ in range(formatter):
         tabs += "    "
-    
+
     if level == ERROR:
         msg = "[✗] ERROR - " + msg
         color = Fore.RED + Style.BRIGHT
@@ -34,10 +34,9 @@ def print_console(msg, level=INFO, formatter=0):
         msg = "[ℹ] " + msg
         color = Fore.LIGHTBLUE_EX
     elif level == DEFAULT:
-        msg = msg
         color = Fore.WHITE
     elif level == WARNING:
         msg = "[⚠] " + msg
         color = Fore.YELLOW + Style.BRIGHT
-    
+
     print(color + tabs + msg + Style.RESET_ALL)
