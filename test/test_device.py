@@ -51,15 +51,25 @@ class TestListApplications:
         mock_device = MagicMock()
         app1 = MagicMock()
         app1.identifier = "com.example.app1"
+        app1.name = "App One"
         app2 = MagicMock()
         app2.identifier = "com.example.app2"
-        mock_device.enumerate_applications.return_value = [app1, app2]
+        app2.name = "App Two"
+        mock_device.enumerate_applications.return_value = [app2, app1]
 
         list_applications(mock_device)
 
-        identifiers = [c[0][0] for c in mock_print.call_args_list]
-        assert "com.example.app1" in identifiers
-        assert "com.example.app2" in identifiers
+        lines = [c[0][0] for c in mock_print.call_args_list]
+        # Header and separator
+        assert "Bundle Identifier" in lines[0]
+        assert "Name" in lines[0]
+        # Apps are sorted by identifier
+        assert "com.example.app1" in lines[2]
+        assert "App One" in lines[2]
+        assert "com.example.app2" in lines[3]
+        assert "App Two" in lines[3]
+        # Summary line
+        assert "2 applications found" in lines[-1]
 
     def test_enumerate_failure_exits(self):
         mock_device = MagicMock()

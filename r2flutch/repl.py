@@ -15,8 +15,17 @@ DEBUG = 3
 DEFAULT = 4
 WARNING = 5
 
+_debug_enabled = False
+
+
+def set_debug_mode(enabled):
+    global _debug_enabled
+    _debug_enabled = enabled
+
 
 def print_console(msg, level=INFO, formatter=0):
+    if level == DEBUG and not _debug_enabled:
+        return
     tabs, color = ["", ""]
     for _ in range(formatter):
         tabs += "    "

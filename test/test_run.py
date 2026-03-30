@@ -212,14 +212,14 @@ class TestMainIpaFlow:
     def test_list_mode_exits(self, mock_init, mock_load_cfg, mock_ssh_conn,
                                mock_device, mock_list_apps, mock_kill):
         mock_device.return_value = MagicMock(id="usb-123")
-        mock_ssh_conn.return_value = (MagicMock(), MagicMock())
-        mock_load_cfg.return_value = {"host": "1.2.3.4", "port": 22, "username": "root", "password": "alpine"}
 
         with patch("sys.argv", ["r2flutch", "-l"]):
             from r2flutch.bin.run import main
             with pytest.raises(SystemExit):
                 main()
         mock_list_apps.assert_called_once()
+        mock_load_cfg.assert_not_called()
+        mock_ssh_conn.assert_not_called()
 
 
 class TestDumpDecryptedModules:
