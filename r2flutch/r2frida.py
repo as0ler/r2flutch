@@ -8,7 +8,7 @@
 """
 r2frida integration and module management module for r2flutch.
 
-This module provides core functionality for interacting with r2frida which 
+This module provides core functionality for interacting with r2frida which
 handles module loading, encryption information extraction, binary patching,
 and file operations through r2frida commands.
 """
@@ -24,7 +24,7 @@ from r2flutch.config import TMP_FOLDER, DUMP_FOLDER, BIN_FOLDER
 def load_all_modules(r2f, app_content):
     """
     Load all dynamic libraries and frameworks from the application content.
-    
+
     Args:
         r2f: The r2frida instance connected to the target application
         app_content: List of file paths representing the application content
@@ -35,13 +35,13 @@ def load_all_modules(r2f, app_content):
         if ext == ".dylib":
             load_library(r2f, filepath)
         elif ext == ".framework":
-            load_library(r2f,filepath)
+            load_library(r2f, filepath)
 
 
 def load_library(r2f, path):
     """
     Load a dynamic library into r2frida for analysis.
-    
+
     Args:
         r2f: The r2frida instance connected to the target application
         path: Path to the dynamic library file to load
@@ -54,10 +54,10 @@ def load_library(r2f, path):
 def load_framework(r2f, path):
     """
     Load a framework into r2frida for analysis.
-    
+
     Uses the r2frida :dlf command to load a framework file into
     the current analysis session.
-    
+
     Args:
         r2f: The r2frida instance connected to the target application
         path: Path to the framework file to load
@@ -70,9 +70,9 @@ def load_framework(r2f, path):
 def load_r2f_plugin(r2f):
     """
     Load the r2flutch TypeScript plugin into r2frida.
-    
+
     Args:
-        r2f: The r2frida instance connected to the target application    
+        r2f: The r2frida instance connected to the target application
     """
     plugin_path = os.path.join(os.path.dirname(os.path.abspath(r2flutch.__file__)), "agent", "plugin.ts")
     r2f.cmd(":. %s" % plugin_path)
@@ -81,10 +81,10 @@ def load_r2f_plugin(r2f):
 def get_main_bundle_name(r2f):
     """
     Get the main bundle name of the target iOS application.
-    
+
     Args:
         r2f: The r2frida instance connected to the target application
-        
+
     Returns:
         str: The main bundle name of the target application
     """
@@ -94,10 +94,10 @@ def get_main_bundle_name(r2f):
 def get_main_bundle_path(r2f):
     """
     Get the main bundle path of the target iOS application.
-        
+
     Args:
         r2f: The r2frida instance connected to the target application
-        
+
     Returns:
         str: The main bundle path of the target application
     """
@@ -107,7 +107,7 @@ def get_main_bundle_path(r2f):
 def get_remote_file(r2f, filepath, debug_enabled=False):
     """
     Get a remote file from the target device using r2frida.
-    
+
     Args:
         r2f: The r2frida instance connected to the target application
         filepath: Path to the file to retrieve from the remote device
@@ -122,11 +122,11 @@ def get_remote_file(r2f, filepath, debug_enabled=False):
 def list_remote_folder(r2f, path):
     """
     List contents of a remote folder on the target device.
-    
+
     Args:
         r2f: The r2frida instance connected to the target application
         path: Path to the remote directory to list
-        
+
     Returns:
         The JSON result of the directory listing command
     """
@@ -138,10 +138,10 @@ def list_remote_folder(r2f, path):
 def get_modules_to_decrypt(r2f):
     """
     Get list of modules that require decryption.
-    
+
     Args:
         r2f: The r2frida instance connected to the target application
-        
+
     Returns:
         List of module dictionaries containing decryption information
     """
@@ -151,10 +151,10 @@ def get_modules_to_decrypt(r2f):
 def get_module_paths(module):
     """
     Generate file paths for module decryption operations.
-    
+
     Args:
         module: Module dictionary containing module information
-        
+
     Returns:
         dict: Dictionary with paths for decrypted binary file and destination binary file path
     """
@@ -166,10 +166,10 @@ def get_module_paths(module):
 def get_encryption_info(module):
     """
     Extract encryption information from a module.
-   
+
     Args:
         module: Module dictionary containing encryption information
-        
+
     Returns:
         dict: Dictionary containing calculated encryption offsets and addresses
     """
@@ -187,10 +187,10 @@ def get_encryption_info(module):
     }
 
 
-def print_encryption_info(module, encryption_info, debug_enabled):
+def print_encryption_info(module, encryption_info, debug_enabled):  # pylint: disable=unused-argument
     """
     Print encryption information for debugging purposes.
-        
+
     Args:
         module: Module dictionary containing module information
         encryption_info: Dictionary containing calculated encryption data
@@ -206,7 +206,7 @@ def print_encryption_info(module, encryption_info, debug_enabled):
 def dump_decrypted_module_data(r2f, offset, destination_path, size):
     """
     Dump decrypted module data from memory to a file.
-        
+
     Args:
         r2f: The r2frida instance connected to the target application
         offset: Memory offset where decrypted data begins
@@ -221,7 +221,7 @@ def dump_decrypted_module_data(r2f, offset, destination_path, size):
 def patch_bin(decrypted_bin, patched_bin, crypt_header, cryptoff, debug_enabled=False):
     """
     Patch a binary file with decrypted data and update encryption flags.
-    
+
     Args:
         decrypted_bin: Path to the file containing decrypted data
         patched_bin: Path where the patched data is found

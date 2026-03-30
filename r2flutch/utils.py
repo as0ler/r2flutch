@@ -21,7 +21,7 @@ from r2flutch.repl import print_console
 def generate_ipa(path, app_name, target_dir="."):
     """
     Generate an IPA file from a decrypted iOS application.
-    
+
     Args:
         path: Path to the directory containing the decrypted application
         app_name: Name of the application (used for the IPA filename)
@@ -41,7 +41,7 @@ def generate_ipa(path, app_name, target_dir="."):
 def copy_modules_to_app_bundle(dumped_modules, app_path):
     """
     Copy decrypted modules back into the application bundle structure.
-    
+
     Args:
         dumped_modules: List of module dictionaries containing module information
         app_path: Path to the destination application bundle directory

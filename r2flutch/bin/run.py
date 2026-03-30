@@ -20,10 +20,14 @@ import sys
 from r2flutch.repl import print_console, SUCCESS
 from r2flutch.device import get_usb_device, list_applications, spawn_r2frida_process, kill_process
 from r2flutch.io import set_block_size, get_application_content, list_application_content
-from r2flutch.r2frida import load_all_modules, get_main_bundle_name, get_main_bundle_path, load_r2f_plugin, get_modules_to_decrypt, get_module_paths
+from r2flutch.r2frida import (load_all_modules, get_main_bundle_name,
+                              get_main_bundle_path, load_r2f_plugin,
+                              get_modules_to_decrypt, get_module_paths)
 from r2flutch.r2frida import get_encryption_info, print_encryption_info, dump_decrypted_module_data, patch_bin
 from r2flutch.io import get_file, REMOTE_PREFIX
-from r2flutch.config import BLOCKSIZE, TMP_FOLDER, DUMP_FOLDER, BIN_FOLDER, TRANSPORT_SSH, TRANSPORT_FRIDA, DEFAULT_TRANSPORT, load_ssh_config
+from r2flutch.config import (BLOCKSIZE, TMP_FOLDER, DUMP_FOLDER, BIN_FOLDER,
+                             TRANSPORT_SSH, TRANSPORT_FRIDA, DEFAULT_TRANSPORT,
+                             load_ssh_config)
 from r2flutch.ssh import ssh_connect, ssh_disconnect
 from r2flutch.utils import generate_ipa, copy_modules_to_app_bundle
 
@@ -42,7 +46,7 @@ def init():
 def main():
     """
     Main entry point for the r2flutch command-line tool.
-    
+
     Parses command-line arguments and orchestrates the iOS application
     decryption process. Handles device connection, r2frida process spawning,
     module loading, decryption, and optional IPA generation.
@@ -109,17 +113,17 @@ def main():
 def dump_decrypted_modules(r2f, debug_enabled=False, transport=TRANSPORT_FRIDA, sftp=None):
     """
     Decrypt all modules in the target iOS application.
-    
+
     Iterates through all modules that require decryption, extracts encryption
     information, dumps decrypted data, and patches the binary files with
     the decrypted content.
-    
+
     Args:
         r2f: The r2frida instance connected to the target application
         debug_enabled: Boolean flag to enable debug output and verbose logging
         transport (str): Transport mode - 'ssh' or 'frida'
         sftp: paramiko SFTPClient instance (required when transport is 'ssh')
-    
+
     Returns:
         list: A list of dictionaries containing information about each dumped
               module, including source path and relative path within the app bundle
@@ -131,15 +135,19 @@ def dump_decrypted_modules(r2f, debug_enabled=False, transport=TRANSPORT_FRIDA, 
         encryption_info = get_encryption_info(module)
         if debug_enabled:
             print_encryption_info(module, encryption_info, debug_enabled)
-        print_console("Dumping decrypted data from %s at %s (%s Bytes)" % (module["name"], encryption_info["offset"], encryption_info["size"]))
+        print_console("Dumping decrypted data from %s at %s (%s Bytes)"
+                      % (module["name"], encryption_info["offset"], encryption_info["size"]))
         dump_decrypted_module_data(r2f, encryption_info["offset"], paths["decrypted_bin"], encryption_info["size"])
         print_console("Copying original binary to %s" % paths["patched_bin"])
         if transport == TRANSPORT_SSH:
             remote_bin_path = module["path"]
         else:
             remote_bin_path = os.path.join(REMOTE_PREFIX, module["path"].lstrip(os.path.sep))
-        get_file(r2f, remote_bin_path, os.path.dirname(paths["patched_bin"]), debug_enabled, transport=transport, sftp=sftp)
-        patch_bin(paths["decrypted_bin"], paths["patched_bin"], encryption_info["crypt_header"], encryption_info["crypt_offset"], debug_enabled)
+        get_file(r2f, remote_bin_path, os.path.dirname(paths["patched_bin"]),
+                debug_enabled, transport=transport, sftp=sftp)
+        patch_bin(paths["decrypted_bin"], paths["patched_bin"],
+                 encryption_info["crypt_header"], encryption_info["crypt_offset"],
+                 debug_enabled)
         print_console("Module %s successfully decrypted" % paths["patched_bin"])
         relative_path = re.sub(r".*\.app/", "", module["path"])
         dumped_modules.append({"src_path": paths["patched_bin"], "relative_path": relative_path})
@@ -148,4 +156,3 @@ def dump_decrypted_modules(r2f, debug_enabled=False, transport=TRANSPORT_FRIDA, 
 
 if __name__ == '__main__':
     main()
-
