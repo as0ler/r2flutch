@@ -2,6 +2,8 @@
 
 Yet another tool to decrypt iOS apps using r2frida.
 
+Frida 17 supported (tested on 17.9.1)
+
 ![Demo](img/demo.gif)
 
 ## Requirements
