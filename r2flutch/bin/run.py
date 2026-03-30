@@ -17,7 +17,7 @@ import re
 import os
 import shutil
 import sys
-from r2flutch.repl import print_console, SUCCESS
+from r2flutch.repl import print_console, SUCCESS, DEBUG, set_debug_mode
 from r2flutch.device import get_usb_device, list_applications, spawn_r2frida_process, kill_process
 from r2flutch.io import set_block_size, get_application_content, list_application_content
 from r2flutch.r2frida import (load_all_modules, get_main_bundle_name,
@@ -70,6 +70,7 @@ def main():
     output_dir = arguments.output if arguments.output else '.'
     os.makedirs(output_dir, exist_ok=True)
     debug_enabled = arguments.debug
+    set_debug_mode(debug_enabled)
     transport = arguments.transport
     device = get_usb_device()
     if arguments.list:
@@ -136,9 +137,9 @@ def dump_decrypted_modules(r2f, debug_enabled=False, transport=TRANSPORT_FRIDA, 
         if debug_enabled:
             print_encryption_info(module, encryption_info, debug_enabled)
         print_console("Dumping decrypted data from %s at %s (%s Bytes)"
-                      % (module["name"], encryption_info["offset"], encryption_info["size"]))
+                      % (module["name"], encryption_info["offset"], encryption_info["size"]), level=DEBUG)
         dump_decrypted_module_data(r2f, encryption_info["offset"], paths["decrypted_bin"], encryption_info["size"])
-        print_console("Copying original binary to %s" % paths["patched_bin"])
+        print_console("Copying original binary to %s" % paths["patched_bin"], level=DEBUG)
         if transport == TRANSPORT_SSH:
             remote_bin_path = module["path"]
         else:
@@ -148,7 +149,7 @@ def dump_decrypted_modules(r2f, debug_enabled=False, transport=TRANSPORT_FRIDA, 
         patch_bin(paths["decrypted_bin"], paths["patched_bin"],
                  encryption_info["crypt_header"], encryption_info["crypt_offset"],
                  debug_enabled)
-        print_console("Module %s successfully decrypted" % paths["patched_bin"])
+        print_console("Module %s decrypted successfully" % module["name"])
         relative_path = re.sub(r".*\.app/", "", module["path"])
         dumped_modules.append({"src_path": paths["patched_bin"], "relative_path": relative_path})
     return dumped_modules

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from unittest.mock import patch
-from r2flutch.repl import print_console, INFO, SUCCESS, ERROR, DEBUG, DEFAULT, WARNING
+from r2flutch.repl import print_console, set_debug_mode, INFO, SUCCESS, ERROR, DEBUG, DEFAULT, WARNING
 
 
 class TestPrintConsole:
@@ -30,10 +30,20 @@ class TestPrintConsole:
 
     @patch("builtins.print")
     def test_debug_level(self, mock_print):
-        print_console("trace", level=DEBUG)
-        output = mock_print.call_args[0][0]
-        assert "DEBUG" in output
-        assert "trace" in output
+        set_debug_mode(True)
+        try:
+            print_console("trace", level=DEBUG)
+            output = mock_print.call_args[0][0]
+            assert "DEBUG" in output
+            assert "trace" in output
+        finally:
+            set_debug_mode(False)
+
+    @patch("builtins.print")
+    def test_debug_suppressed_when_disabled(self, mock_print):
+        set_debug_mode(False)
+        print_console("hidden", level=DEBUG)
+        mock_print.assert_not_called()
 
     @patch("builtins.print")
     def test_default_level(self, mock_print):

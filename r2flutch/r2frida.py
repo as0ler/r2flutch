@@ -17,7 +17,7 @@ import base64
 import os
 import r2pipe
 import r2flutch
-from r2flutch.repl import print_console, DEBUG
+from r2flutch.repl import print_console, DEBUG, INFO
 from r2flutch.config import TMP_FOLDER, DUMP_FOLDER, BIN_FOLDER
 
 
@@ -46,7 +46,7 @@ def load_library(r2f, path):
         r2f: The r2frida instance connected to the target application
         path: Path to the dynamic library file to load
     """
-    print_console("Loading library %s" % path)
+    print_console("Loading library %s" % path, level=DEBUG)
     r2cmd = ":dl %s" % path
     return r2f.cmdj(r2cmd)
 
@@ -62,7 +62,7 @@ def load_framework(r2f, path):
         r2f: The r2frida instance connected to the target application
         path: Path to the framework file to load
     """
-    print_console("Loading framework %s" % path)
+    print_console("Loading framework %s" % path, level=DEBUG)
     r2cmd = ":dlf %s" % path
     return r2f.cmdj(r2cmd)
 
@@ -229,7 +229,7 @@ def patch_bin(decrypted_bin, patched_bin, crypt_header, cryptoff, debug_enabled=
         cryptoff: Offset where decrypted data should be written
         debug_enabled: Boolean flag to enable debug output
     """
-    print_console("Writing decrypted data %s to file %s at %s" % (decrypted_bin, patched_bin, cryptoff))
+    print_console("Writing decrypted data %s to file %s at %s" % (decrypted_bin, patched_bin, cryptoff), level=DEBUG)
     r2_raw = r2pipe.open(patched_bin, ["-nw"])
     cryptid_offset = hex(int(crypt_header, 16) + int("0x10", 16))
     if debug_enabled:
@@ -237,6 +237,6 @@ def patch_bin(decrypted_bin, patched_bin, crypt_header, cryptoff, debug_enabled=
         print_console("crypt_offset: %s" % cryptoff, level=DEBUG)
         print_console("cryptid_offset: %s" % cryptid_offset, level=DEBUG)
     r2_raw.cmd("s %s; wff %s" % (cryptoff, decrypted_bin))
-    print_console("Patching cryptid at offset %s" % cryptid_offset)
+    print_console("Patching cryptid at offset %s" % cryptid_offset, level=DEBUG)
     r2_raw.cmd("s %s; wx 00" % cryptid_offset)
     r2_raw.quit()

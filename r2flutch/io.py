@@ -16,7 +16,7 @@ import os
 import shutil
 import sys
 from tqdm import tqdm
-from r2flutch.repl import print_console, ERROR, DEBUG
+from r2flutch.repl import print_console, ERROR, DEBUG, INFO
 from r2flutch.config import REMOTE_PREFIX, TRANSPORT_SSH, TRANSPORT_FRIDA
 from r2flutch.r2frida import get_remote_file, list_remote_folder, get_main_bundle_path
 from r2flutch.ssh import ssh_list_remote_folder, ssh_get_remote_file
@@ -37,7 +37,7 @@ def set_block_size(r2f, blocksize, debug_enabled=False):
     if debug_enabled:
         print_console("r2.cmd: b %s" % blocksize, level=DEBUG)
     r2f.cmd(r"b %s" % blocksize)
-    print_console("Set block size to " + r2f.cmd(r"b").strip())
+    print_console("Set block size to " + r2f.cmd(r"b").strip(), level=DEBUG)
 
 
 def get_application_content(r2f, app_content, dest_folder, debug_enabled,
@@ -59,7 +59,7 @@ def get_application_content(r2f, app_content, dest_folder, debug_enabled,
     """
     if not os.path.exists(dest_folder):
         os.makedirs(dest_folder)
-    print_console("Copy application bundle to: %s" % dest_folder)
+    print_console("Copy application bundle to: %s" % dest_folder, level=DEBUG)
     if bundle_path is None:
         bundle_path = get_main_bundle_path(r2f)
     with tqdm(total=len(app_content), desc="Copying application bundle", unit="file") as pbar:
