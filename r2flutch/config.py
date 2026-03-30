@@ -47,5 +47,15 @@ def load_ssh_config(config_path):
         if required_field not in ssh_cfg or not ssh_cfg[required_field]:
             sys.exit("[x] Config file missing required SSH field: %s" % required_field)
 
-    ssh_cfg.setdefault("port", 22)
+    # Normalize and validate port
+    port = ssh_cfg.get("port", 22)
+    try:
+        port = int(port)
+    except (TypeError, ValueError):
+        sys.exit("[x] Invalid SSH port value in config file: %r" % port)
+
+    if not (1 <= port <= 65535):
+        sys.exit("[x] SSH port out of valid range (1-65535): %d" % port)
+
+    ssh_cfg["port"] = port
     return ssh_cfg
