@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import os
-import shutil
 import zipfile
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from r2flutch.utils import generate_ipa, copy_modules_to_app_bundle
 
 
