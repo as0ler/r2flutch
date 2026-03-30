@@ -199,7 +199,12 @@ def list_application_content(r2f, debug_enabled=False, transport=TRANSPORT_FRIDA
         list: A list of all file paths in the application bundle
     """
     if transport == TRANSPORT_SSH:
-        remote_app_path = bundle_path
+        # Use provided bundle_path when available, otherwise resolve it to avoid
+        # passing None into recursive listing functions.
+        if bundle_path is None:
+            remote_app_path = get_main_bundle_path(r2f)
+        else:
+            remote_app_path = bundle_path
     else:
         remote_app_path = os.path.join(REMOTE_PREFIX, get_main_bundle_path(r2f).lstrip(os.sep))
     return list_content_path_with_progress(r2f, remote_app_path, debug_enabled, transport, sftp)
