@@ -2,6 +2,8 @@
 
 Yet another tool to decrypt iOS apps using r2frida.
 
+![Demo](demo.gif)
+
 ## Requirements
 
 - Jailbroken iOS device
