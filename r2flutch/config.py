@@ -54,7 +54,7 @@ def load_ssh_config(config_path):
     except (TypeError, ValueError):
         sys.exit("[x] Invalid SSH port value in config file: %r" % port)
 
-    if not (1 <= port <= 65535):
+    if not 1 <= port <= 65535:
         sys.exit("[x] SSH port out of valid range (1-65535): %d" % port)
 
     ssh_cfg["port"] = port

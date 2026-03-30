@@ -96,3 +96,24 @@ class TestLoadSshConfig:
         path.write_text(json.dumps(config))
         with pytest.raises(SystemExit):
             load_ssh_config(str(path))
+
+    def test_invalid_port_type_exits(self, tmp_path):
+        config = {"ssh": {"host": "1.2.3.4", "username": "root", "password": "alpine", "port": "abc"}}
+        path = tmp_path / "config.json"
+        path.write_text(json.dumps(config))
+        with pytest.raises(SystemExit):
+            load_ssh_config(str(path))
+
+    def test_port_out_of_range_exits(self, tmp_path):
+        config = {"ssh": {"host": "1.2.3.4", "username": "root", "password": "alpine", "port": 99999}}
+        path = tmp_path / "config.json"
+        path.write_text(json.dumps(config))
+        with pytest.raises(SystemExit):
+            load_ssh_config(str(path))
+
+    def test_port_zero_exits(self, tmp_path):
+        config = {"ssh": {"host": "1.2.3.4", "username": "root", "password": "alpine", "port": 0}}
+        path = tmp_path / "config.json"
+        path.write_text(json.dumps(config))
+        with pytest.raises(SystemExit):
+            load_ssh_config(str(path))
