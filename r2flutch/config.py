@@ -32,7 +32,7 @@ def load_ssh_config(config_path):
               host, port, username, password
     """
     try:
-        with open(config_path, "r") as fh:
+        with open(config_path, "r", encoding="utf-8") as fh:
             data = json.load(fh)
     except FileNotFoundError:
         sys.exit("[x] Config file not found: %s" % config_path)

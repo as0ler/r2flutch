@@ -12,10 +12,8 @@ This module provides functions for file operations, remote file handling,
 and application bundle management in the r2flutch framework.
 """
 
-import sys
 import os
 import shutil
-import base64
 from tqdm import tqdm
 from r2flutch.repl import print_console, ERROR, DEBUG
 from r2flutch.config import REMOTE_PREFIX, TRANSPORT_SSH, TRANSPORT_FRIDA
@@ -29,7 +27,7 @@ IGNORED_FILES = [".gitkeep", ".gitignore"]
 def set_block_size(r2f, blocksize, debug_enabled=False):
     """
     Set the block size in the radare2 session.
-    
+
     Args:
         r2f: The r2frida instance to configure
         blocksize (int): The block size to set
@@ -41,13 +39,14 @@ def set_block_size(r2f, blocksize, debug_enabled=False):
     print_console("Set block size to " + r2f.cmd(r"b").strip())
 
 
-def get_application_content(r2f, app_content, dest_folder, debug_enabled, transport=TRANSPORT_FRIDA, sftp=None, bundle_path=None):
+def get_application_content(r2f, app_content, dest_folder, debug_enabled,
+                            transport=TRANSPORT_FRIDA, sftp=None, bundle_path=None):
     """
     Copy remote application bundle content to a local destination directory.
-    
+
     Creates the destination directory if it doesn't exist and downloads
     all files from the remote application bundle, excluding ignored files.
-    
+
     Args:
         r2f: The r2frida instance for remote operations
         app_content (list): List of file paths in the application bundle
@@ -74,14 +73,14 @@ def get_application_content(r2f, app_content, dest_folder, debug_enabled, transp
                 pbar.update(1)
 
 
-def get_remote_path(r2f, filepath):
+def get_remote_path(r2f, filepath):  # pylint: disable=unused-argument
     """
     Convert a local file path to a remote path using the remote prefix.
-    
+
     Args:
         r2f: The r2frida instance (unused but kept for consistency)
         filepath (str): The local file path to convert
-    
+
     Returns:
         str: The remote path
     """
@@ -91,9 +90,9 @@ def get_remote_path(r2f, filepath):
 def get_file(r2f, filepath, dest_folder, debug_enabled=False, transport=TRANSPORT_FRIDA, sftp=None):
     """
     Download a single file from the remote device to a local destination folder.
-    
+
     Creates the destination folder if it doesn't exist.
-    
+
     Args:
         r2f: The r2frida instance for remote operations
         filepath (str): The remote file path to download including the remote prefix
@@ -116,13 +115,14 @@ def get_file(r2f, filepath, dest_folder, debug_enabled=False, transport=TRANSPOR
     else:
         print_console("Failed to copy file: %s to %s" % (downloaded_file, dest_folder), level=ERROR)
 
+
 def list_content_path(r2f, path, debug_enabled=False, progress_bar=None, transport=TRANSPORT_FRIDA, sftp=None):
     """
     Recursively list all files in a remote directory path.
-    
+
     Traverses the directory tree and returns a flat list of all file paths,
     excluding directories. This function is called recursively for subdirectories.
-    
+
     Args:
         r2f: The r2frida instance for remote operations
         path (str): The remote directory path to list
@@ -130,7 +130,7 @@ def list_content_path(r2f, path, debug_enabled=False, progress_bar=None, transpo
         progress_bar (tqdm, optional): Progress bar instance for tracking progress
         transport (str): Transport mode - 'ssh' or 'frida'
         sftp: paramiko SFTPClient instance (required when transport is 'ssh')
-    
+
     Returns:
         list: A list of file paths found in the directory and subdirectories
     """
@@ -149,17 +149,18 @@ def list_content_path(r2f, path, debug_enabled=False, progress_bar=None, transpo
             app_content.extend(list_content_path(r2f, file_path, debug_enabled, progress_bar, transport, sftp))
     return app_content
 
+
 def list_content_path_with_progress(r2f, path, debug_enabled=False, transport=TRANSPORT_FRIDA, sftp=None):
     """
     Wrapper function that provides a progress bar for list_content_path.
-    
+
     Args:
         r2f: The r2frida instance for remote operations
         path (str): The remote directory path to list
         debug_enabled (bool, optional): Whether to enable debug output. Defaults to False.
         transport (str): Transport mode - 'ssh' or 'frida'
         sftp: paramiko SFTPClient instance (required when transport is 'ssh')
-    
+
     Returns:
         list: A list of file paths found in the directory and subdirectories
     """
@@ -174,7 +175,7 @@ def list_content_path_with_progress(r2f, path, debug_enabled=False, transport=TR
             if file_obj["type"] == "directory":
                 count += count_files_recursive(r2f, os.path.join(path, file_obj["name"]))
         return count
-    
+
     total_files = count_files_recursive(r2f, path)
     with tqdm(total=total_files, desc="Listing application content", unit="files") as pbar:
         return list_content_path(r2f, path, debug_enabled, pbar, transport, sftp)
@@ -183,17 +184,17 @@ def list_content_path_with_progress(r2f, path, debug_enabled=False, transport=TR
 def list_application_content(r2f, debug_enabled=False, transport=TRANSPORT_FRIDA, sftp=None, bundle_path=None):
     """
     List all content files in the main application bundle.
-    
+
     Gets the main bundle path from the device and lists all files
     recursively within that bundle.
-    
+
     Args:
         r2f: The r2frida instance for remote operations
         debug_enabled (bool, optional): Whether to enable debug output. Defaults to False.
         transport (str): Transport mode - 'ssh' or 'frida'
         sftp: paramiko SFTPClient instance (required when transport is 'ssh')
         bundle_path (str): Pre-resolved bundle path (used with SSH transport)
-    
+
     Returns:
         list: A list of all file paths in the application bundle
     """
