@@ -8,5 +8,5 @@ from setuptools import setup
 setup(
     setup_requires=["pbr"],
     pbr=True,
-    package_files=[("agent", ["r2flutch/agent/plugin.ts"])]
+    package_data={"r2flutch": ["agent/_agent.js"]},
 )

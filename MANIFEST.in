@@ -1,1 +1,4 @@
-include r2flutch/agent/*
+include r2flutch/agent/_agent.js
+include r2flutch/agent/plugin.ts
+include r2flutch/agent/r2frida.d.ts
+include r2flutch/agent/package.json

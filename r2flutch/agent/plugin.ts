@@ -11,7 +11,7 @@ import type { DecryptedModule, EncryptionInfo, MachOHeader } from "./r2frida";
 
 const MH_MAGIC_64 = 0xfeedfacf;
 
-const commands = {
+const commands: { [key: string]: any } = {
     dump: dump,
     "dump*": R2dump,
     getMainBundleName: getMainBundleName,
@@ -92,12 +92,12 @@ function getAllAppModules (appPath: string) {
     return appModules;
 }
 
-function isMachoHeaderAtOffset (offset) {
+function isMachoHeaderAtOffset (offset: NativePointer) {
     const cursor = trunc4k(offset);
     return (cursor.readU32() === MH_MAGIC_64);
 }
 
-function trunc4k (x) {
+function trunc4k (x: NativePointer) {
     return x.and(ptr("0xfff").not());
 }
 

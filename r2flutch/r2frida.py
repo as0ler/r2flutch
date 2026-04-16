@@ -74,7 +74,7 @@ def load_r2f_plugin(r2f):
     Args:
         r2f: The r2frida instance connected to the target application
     """
-    plugin_path = os.path.join(os.path.dirname(os.path.abspath(r2flutch.__file__)), "agent", "plugin.ts")
+    plugin_path = os.path.join(os.path.dirname(os.path.abspath(r2flutch.__file__)), "agent", "_agent.js")
     r2f.cmd(":. %s" % plugin_path)
 
 

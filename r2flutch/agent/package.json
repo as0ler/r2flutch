@@ -6,15 +6,15 @@
     "type": "module",
     "main": "plugin.ts",
     "scripts": {
-        "build": "npm install"
+        "build": "frida-compile plugin.ts -o _agent.js -S -c"
     },
     "license": "GPL-3.0",
     "engines": {
         "node": ">=20.0"
     },
     "devDependencies": {
+        "frida-compile": "^19.0.0",
         "frida-objc-bridge": "^8.0.5",
-        "typescript": "^5.8.3",
         "@types/frida-gum": "^19.0.1"
     }
 }

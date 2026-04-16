@@ -9,6 +9,9 @@ pip install -r "$SCRIPT_DIR/requirements.txt"
 echo "[*] Installing r2flutch agent dependencies..."
 (cd "$SCRIPT_DIR/r2flutch/agent" && npm install)
 
+echo "[*] Building r2flutch agent..."
+(cd "$SCRIPT_DIR/r2flutch/agent" && npm run build)
+
 echo "[*] Installing r2flutch package..."
 pip install "$SCRIPT_DIR"
 
