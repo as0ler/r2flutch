@@ -105,7 +105,10 @@ def kill_process(device, r2f):
     """
     Kill the target process.
     """
-    pid = r2f.cmd(":getPID")
+    pid = r2f.cmd(":getPID").strip()
+    if not pid:
+        print_console("[!] could not kill the process %s" % pid, WARNING)
+        return
     print_console("Killing process %s" % pid, level=DEBUG)
     try:
         device.kill(int(pid))
